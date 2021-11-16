@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -o errexit
+# set -o errexit
 
 SCRIPTPATH="$(dirname "$(realpath "${0}")")"
 

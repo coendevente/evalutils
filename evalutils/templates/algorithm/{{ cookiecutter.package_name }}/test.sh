@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 
-set -o errexit
+# set -o errexit
 
+# RANDOM_READ_BYTES is tha amount of bytes to read from /dev/urandom.
+# No particular reason for any specific value, just something vaguely sensible that provides a
+# finite limit on reading from /dev/urandom and gives the message digest (here hard-coded to md5)
+# something to calculate on...
+RANDOM_READ_BYTES=1024
 SCRIPTPATH="$(dirname "$(realpath "${0}")")"
 
-./build.sh
+"${SCRIPTPATH}/build.sh"
 
-VOLUME_SUFFIX=$(dd if=/dev/urandom bs=32 count=1 | md5sum | cut --delimiter=' ' --fields=1)
+VOLUME_SUFFIX=$(dd if=/dev/urandom bs=${RANDOM_READ_BYTES} count=1 | md5sum | cut --delimiter=' ' --fields=1)
 
 docker volume create "{{ cookiecutter.package_name|lower }}-output-${VOLUME_SUFFIX}"
 
@@ -17,7 +22,7 @@ docker run --rm \
 
 docker run --rm \
         -v "{{ cookiecutter.package_name|lower }}-output-${VOLUME_SUFFIX}":/output/ \
-        {{ cookiecutter.docker_base_container }} cat /output/metrics.json | python -m json.tool
+        {{ cookiecutter.docker_base_container }} cat /output/results.json | python -m json.tool
 
 docker run --rm \
         -v "{{ cookiecutter.package_name|lower }}-output-$VOLUME_SUFFIX":/output/ \
