@@ -304,7 +304,7 @@ class ClassificationAlgorithm(Algorithm):
 
         # Test classification output
         if not isinstance(results, dict):
-            raise ValueError("Exepected a dictionary as output")
+            raise ValueError("Expected a dictionary as output")
 
         # Write resulting classification to result.json for this case
         return {
